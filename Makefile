@@ -1,25 +1,30 @@
-NAME = fdf
+NAME	= fdf
+#CFLAGS	= -Wextra -Wall -Werror
+LIBMLX	= ./MLX42
 
-SRCS = main.c
-OBJS = $(SRCS:.c=.o)
+HEADERS	= -I ./include -I $(LIBMLX)/include
+LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+SRCS	= main.c
+OBJS	= ${SRCS:.c=.o}
 
-MLX = minilibx_mac
+all: libmlx $(NAME)
 
-CC = cc
-CFLAGS = -Wall -Werror -Wextra
-
-all: $(NAME)
-
-#mac
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) -L$(MLX) -l$(MLX) -framework OpenGL -framework AppKit -o $(NAME)
+libmlx:
+	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	$(CC) -Wall -Wextra -Werror -I$(MLX) -c $< -o $@
+	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
-#linux
-#$(NAME): $(OBJ)
-#	$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 
-#%.o: %.c
-#	$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
+clean:
+	rm -rf $(OBJS)
+	rm -rf $(LIBMLX)/build
+
+fclean: clean
+	rm -rf $(NAME)
+
+re: clean all
+
+.PHONY: all, clean, fclean, re, libmlx

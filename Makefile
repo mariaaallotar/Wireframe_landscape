@@ -3,7 +3,10 @@ NAME	= fdf
 LIBMLX	= ./MLX42
 
 HEADERS	= -I ./include -I $(LIBMLX)/include
-LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+#linux
+#LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+#mac
+LIBS	= $(LIBMLX)/build/libmlx42.a -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.8/lib/"
 SRCS	= main.c
 OBJS	= ${SRCS:.c=.o}
 

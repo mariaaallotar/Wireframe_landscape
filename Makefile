@@ -1,4 +1,5 @@
 NAME	= fdf
+CC		= clang
 #CFLAGS	= -Wextra -Wall -Werror
 LIBMLX	= ./MLX42
 
@@ -11,7 +12,9 @@ HEADERS	= -I ./include -I $(LIBMLX)/include
 LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 #mac
 #LIBS	= $(LIBMLX)/build/libmlx42.a -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.8/lib/"
-SRCS	= main.c
+SRCS	= main.c \
+	parse_map.c \
+	linear_transformations.c
 OBJS	= ${SRCS:.c=.o}
 
 all: libmlx $(LIBFT) $(NAME)
@@ -20,10 +23,10 @@ libmlx:
 	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+	$(CC) -g $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS) libft
-	$(CC) $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
+	$(CC) -g $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	echo "Should make libft"

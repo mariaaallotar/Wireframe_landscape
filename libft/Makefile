@@ -6,7 +6,7 @@
 #    By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 10:42:28 by maheleni          #+#    #+#              #
-#    Updated: 2024/07/24 11:27:12 by maheleni         ###   ########.fr        #
+#    Updated: 2024/07/25 09:59:48 by maheleni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ SRCS = ft_isalnum.c \
 
 OBJS = $(SRCS:.c=.o)
 
-CC = cc
+CC = cc -g
 CFLAGS = -Wall -Werror -Wextra
 RM = rm -rf
 

@@ -1,275 +1,92 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <math.h>
-#include <fcntl.h>
-#include "MLX42/MLX42.h"
-#include "libft/libft.h"
-#include <errno.h>
-#define WIDTH 520
-#define HEIGHT 520
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
+/*   Updated: 2024/07/28 11:58:07 by maheleni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_point
-{
-	float	x;
-	float	y;
-	float	z;
-	int		right_adge;
-	int		bottom_edge;
-}	t_point;
+#include "fdf.h"
 
-typedef struct s_map
-{
-	int 	height;
-	int 	width;
-	t_point	*points;
-}	t_map;
-
-static void error(void)
+void	error(void)
 {
 	puts(mlx_strerror(mlx_errno));
 	exit(EXIT_FAILURE);
 }
 
-// void drawline( mlx_image_t* img, int x0, int y0, int x1, int y1)  
-// {  
-// 	int dx, dy, p, x, y;
-
-// 	dx = x1 - x0;
-// 	dy = y1 - y0;
-// 	p = 2 * dy - dx;
-// 	x = x0;
-// 	y = y0;
-// 	while(x <= x1)
-// 	{
-// 		if(p >= 0)
-// 		{  
-// 			mlx_put_pixel(img, x, y, 0xFF0000FF);
-// 			y = y + 1;
-// 			p = p + 2 * dy - 2 * dx;
-// 		}
-// 		else
-// 		{
-// 			mlx_put_pixel(img, x, y, 0xFF0000FF);
-// 			p = p + 2 * dy;
-// 		}
-// 		x = x + 1;
-// 	}
-// 	printf("Exiting drawline\n");
-// }  
-
-// t_point	isometric_transformation(int x, int y, int z)
+// t_map*	read_map(int fd, t_map *map)
 // {
-// 	int	r1 = 3;
-// 	int c1 = 3;
-// 	int r2 = 3;
-// 	int c2 = 1;
-
-// 	float	m1[3][3] = { { sqrt(2)/2, -(sqrt(2)/2), 0 }, { sqrt(2)/2, sqrt(2)/2, 0 }, { 0, 0, 1 } };
-// 	float	m2[3][3] = { {1, 0, 0}, {0, sqrt(3)/3, -(sqrt(6)/3)}, {0, sqrt(6)/3, sqrt(3)/3}};
-// 	float	result[3][1];
-
-// 	// printf("ISOMETRIC:\n");
-// 	int i = 0;
-// 	while (i < 3)
-// 	{
-// 		result[i][0] = x * m1[i][0] + y * m1[i][1] + z * m1[i][2];
-// 		i++;
-// 	}
-
-// 	float new_x = result[0][0];
-// 	float new_y = result[1][0];
-// 	float new_z = result[2][0];
-
-// 	i = 0;
-// 	while (i < 3)
-// 	{
-// 		result[i][0] = new_x * m2[i][0] + new_y * m2[i][1] + new_z * m2[i][2];
-// 		i++;
-// 	}
-
-// 	t_point transformed_point;
-// 	transformed_point.x = result[0][0];
-// 	transformed_point.y = result[1][0];
-// 	transformed_point.z = result[2][0];
-
-// 	// printf("Returning\n");
-//     return (transformed_point);
+// 	get_dimensions(fd, map);
+// 	int width = map->width;		//DEBUG
+// 	int height = map->height;	//DEBUG
+// 	map->points = malloc (map->width * map->height * sizeof(t_point));
+// 	if (map->points == NULL)
+// 		error();
+// 	parse_map(fd, map);
+// 	return (map);
 // }
-
-// t_point orthographic_projection(t_point point)
-// {
-// 	float	result[3][1];
-// 	int m1[3][3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
-
-// 	printf("ORTOGRAPHIC:\n");
-// 	int i = 0;
-// 	while (i < 3)
-// 	{
-// 		result[i][0] = (point.x * m1[i][0] + point.y * m1[i][1] + point.z * m1[i][2]);
-// 		printf("%f\n", result[i][0]);
-// 		i++;
-// 	}
-// 	point.x = result[0][0];
-// 	point.y = result[1][0];
-// 	point.z = result[2][0];
-// 	return (point);
-// }
-
-void	get_dimensions(int fd, t_map *map)
-{
-	char	*line;
-	int		height;
-
-	height = 0;
-	line = get_next_line(fd);
-	if (line == NULL)
-		error();
-	height++;
-	map->width = ft_count_words(line);
-	while (get_next_line(fd) != NULL)
-		height++;
-	map->height = height;
-}
-
-void	set_point(t_point *points, int j, int i, int k)
-{
-	t_point	point;
-
-	point.x = j * 10;
-	point.y = i * 10;
-	point.z = k * 10;
-	*points = point;
-}
-
-void	populate_map(int i, char *line, t_map *map)
-{
-	int	j;
-
-	j = 0;
-	while (*line != '\0')
-	{
-		set_point(map->points, j, i, ft_atoi(line));
-		(map->points)++;
-		line = skip_to_next_word(line);
-		j++;
-	}
-	free(line);
-}
-
-void	parse_map(int fd, t_map *map)
-{
-	char	*line;
-	int		i;
-
-
-	i = 0;
-	while (i < map->height)
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-		{
-			if (errno != 0)
-			{
-				free(map->points);
-				error();
-			}
-			return ;
-		}
-		populate_map(i, line, &map);
-		i++;
-	}
-	return ;
-}
-
-t_map	read_map(int fd, t_map map)
-{
-	t_map	map;
-
-	get_dimensions(fd, &map);
-	map.points = malloc (map.width * map.height * sizeof(t_point));
-	if (map.points == NULL)
-		error();
-	parse_map(fd, &map);
-	return (map);
-}
 
 int32_t	main(void)
 {
 	t_map map;
-	int half_screen_width = WIDTH / 2;
-  	int half_screen_height = HEIGHT / 2;
-	uint32_t x_screen;
-	uint32_t y_screen;
 
 	int fd = open("./test/42.fdf", O_RDONLY);
-	map = read_map();
+	get_dimensions(fd, &map);
+	map.points = malloc (map.height * sizeof(t_point*));
+	if (map.points == NULL)
+		error();
+	close (fd);
+	fd = open("./test/42.fdf", O_RDONLY);
+	parse_map(fd, &map);
+	printf("X: %f, y: %f, z: %f\n", map.points[8][6].x, map.points[8][6].y, map.points[8][6].z);
+	set_zoom_factor(&map);
 
-	// // Start mlx
-	// mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "Test", true);
-	// if (!mlx)
-    //     error();
+	// Start mlx
+	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "Test", true);
+	if (!mlx)
+        error();
 
-	// // Create a new image
-	// mlx_image_t* img = mlx_new_image(mlx, WIDTH, HEIGHT);
-	// if (!img)
-	// 	error();
+	// Create a new image
+	mlx_image_t* img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!img)
+		error();
 
-	// // Set every pixel to white
-	// memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
+	// Set every pixel to white
+	memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
 
-	// // // mlx_put_pixel(img, 100, 100, 0xFF0000FF); //red
-	// // // mlx_put_pixel(img, 100, 200, 0x00FF00FF); //green
-	// // // mlx_put_pixel(img, 200, 100, 0x0000FFFF); //blue
-	// // // mlx_put_pixel(img, 200, 200, 0xFFFFFF00); //black
+	int i = 0;
+	int offset = 600;
+	while (i < map.height)
+	{
+		int j = 0;
+		while (j < map.width)
+		{
+			isometric_transformation(&(map.points[i][j]));
+			printf("X: %f, Y: %f\n", (map.points[i][j].x), (map.points[i][j].y));
+			printf("X: %f, Y: %f\n", (map.points[i][j].x * map.zoom + offset), (map.points[i][j].y * map.zoom + offset));
+			if ((map.points[i][j].x * map.zoom + offset) >= 0 && ((map.points[i][j].x * map.zoom + offset) <= WIDTH) && ((map.points[i][j].y * map.zoom + offset) >= 0) && ((map.points[i][j].y * map.zoom + offset) <= HEIGHT))
+			{
+				printf("PRINTING: X: %f, Y: %f\n", (map.points[i][j].x * map.zoom +offset), (map.points[i][j].y * map.zoom + offset));
+				mlx_put_pixel(img, (map.points[i][j].x * map.zoom +offset), (map.points[i][j].y * map.zoom + offset), 0xFF0000FF);
+			}
+			printf("%i of total %i\n", (i * map.width) + j, map.width * map.height);
+			j++;
+		}
+		i++;
+	}
 
-	// // // int i = 1;
-	// // // while (i <= 3)
-	// // // {
-	// // // 	int j = 1;
-	// // // 	while (j <= 3)
-	// // // 	{
-	// // // 		if (i == 2 && j == 2)
-	// // // 		{
-	// // // 			map.points[i][j] = orthographic_projection(isometric_transformation(i * 10, j * 10, 5));
-	// // // 			mlx_put_pixel(img, (map.points[i][j].x) + half_screen_width, (map.points[i][j].y) + half_screen_height, 0x00FF00FF);
-	// // // 		}
-	// // // 		else
-	// // // 		{
-	// // // 			map.points[i][j] = orthographic_projection(isometric_transformation(i * 10, j * 10, 0));
-	// // // 			mlx_put_pixel(img, (map.points[i][j].x) + half_screen_width, (map.points[i][j].y) + half_screen_height, 0xFF0000FF);
-	// // // 		}
-	// // // 		j++;
-	// // // 	}
-	// // // 	i++;
-	// // // }
-	// // // drawline(img, 50, 50, 100, 100);
+	// Display an instance of the image
+	if (mlx_image_to_window(mlx, img, 0, 0) < 0)
+        error();
 
-	// // // map.points[0][0] = orthographic_projection(isometric_transformation(20, 20, 0));
-	// // // mlx_put_pixel(img, map.points[0][0].x, map.points[0][0].y, 0xFF0000FF);
-	// // // printf("Pixel put to X: %f and Y: %f\n", map.points[0][0].x, map.points[0][0].y);
+	mlx_loop(mlx);
 
-	// // // map.points[0][1] = orthographic_projection(isometric_transformation(20, 40, 0));
-	// // // mlx_put_pixel(img, map.points[0][1].x, map.points[0][1].y, 0x00FF00FF);
-	// // // printf("Pixel put to X: %f and Y: %f\n", map.points[0][1].x, map.points[0][1].y);
-
-	// // // map.points[1][0] = orthographic_projection(isometric_transformation(40, 20, 0));
-	// // // mlx_put_pixel(img, map.points[1][0].x, map.points[1][0].y, 0x0000FFFF);
-	// // // printf("Pixel put to X: %f and Y: %f\n", map.points[1][0].x, map.points[1][0].y);
-
-	// // // map.points[1][1] = orthographic_projection(isometric_transformation(40, 40, 0));
-	// // // mlx_put_pixel(img, map.points[1][1].x, map.points[1][1].y, 0x000000FF);
-	// // // printf("Pixel put to X: %f and Y: %f\n", map.points[1][1].x, map.points[1][1].y);
-
-	// // Display an instance of the image
-	// if (mlx_image_to_window(mlx, img, 0, 0) < 0)
-    //     error();
-
-	// mlx_loop(mlx);
-
-	// // Optional, terminate will clean up any leftovers, this is just to demonstrate.
-	// mlx_delete_image(mlx, img);
-	// mlx_terminate(mlx);
+	// Optional, terminate will clean up any leftovers, this is just to demonstrate.
+	mlx_delete_image(mlx, img);
+	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }

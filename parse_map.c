@@ -6,20 +6,25 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/28 09:50:59 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/29 13:07:52 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	set_point(t_point **points, int x, int y, int z)
+static void	set_point(t_map *map, int x, int y, int z)
 {
 	t_point	point;
+
+	//DEBUG
+	float new_x = x;
+	float new_y = y;
 
 	point.x = x;
 	point.y = y;
 	point.z = z;
-	points[y-1][x-1] = point;
+	point.height = z;
+	map->points[y-1][x-1] = point;
 }
 
 static char*	skip_to_next_word(char *line)
@@ -47,7 +52,7 @@ static void	populate_map(int i, char *line, t_map *map)
 	j = 1;
 	while (*line != '\0')
 	{
-		set_point(map->points, j, i, ft_atoi(line));
+		set_point(map, j, i, ft_atoi(line));
 		line = skip_to_next_word(line);
 		j++;
 	}

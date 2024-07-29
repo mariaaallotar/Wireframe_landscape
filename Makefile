@@ -1,5 +1,5 @@
 NAME	= fdf
-CC		= clang
+CC		= clang -g
 #CFLAGS	= -Wextra -Wall -Werror
 LIBMLX	= ./MLX42
 
@@ -14,7 +14,9 @@ LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 #LIBS	= $(LIBMLX)/build/libmlx42.a -framework Cocoa -framework OpenGL -framework IOKit -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.8/lib/"
 SRCS	= main.c \
 	parse_map.c \
-	linear_transformations.c
+	linear_transformations.c \
+	hooks.c \
+	pixels_to_img.c
 OBJS	= ${SRCS:.c=.o}
 
 all: libmlx $(LIBFT) $(NAME)

@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/29 14:39:04 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:18:43 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,17 @@
 #define HEIGHT 1200
 #define M_PI 3.14159265358979323846
 
-typedef struct s_point
+typedef struct	s_point
 {
 	float	x;
 	float	y;
 	float	z;
 	int		height;
+	int		right_edge;
+	int		bottom_edge;
 }	t_point;
 
-typedef struct s_view
+typedef struct	s_view
 {
 	float	zoom;
 	float	width_offset;
@@ -43,7 +45,7 @@ typedef struct s_view
 	float	rotation;
 }	t_view;
 
-typedef struct s_map
+typedef struct	s_map
 {
 	int 		height;
 	int 		width;
@@ -52,6 +54,22 @@ typedef struct s_map
 	mlx_image_t	*img;
 }	t_map;
 
+typedef struct	s_line
+{
+	int	x0;
+	int	y0;
+	int	x1;
+	int	y1;
+	int	dx;
+    int	dy;
+	int	x;
+	int	xi;
+	int	y;
+    int	yi;
+	int	d;
+}	t_line;
+
+
 
 void	get_dimensions(int fd, t_map *map);
 void	parse_map(int fd, t_map *map);
@@ -59,7 +77,8 @@ void	isometric_transformation(t_point *point);
 void	rotate_around_z(float deg, t_point *point);
 void	set_zoom_factor(t_view *view, t_map *map);
 void    fdf_keyhook(mlx_key_data_t keydata, void* param);
-void	draw(t_map *map);
+void	fdf_scrollhook(double xdelta, double ydelta, void* param);
+void	draw_map(t_map *map);
 void	error(void);
 
 

@@ -6,11 +6,14 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/29 15:09:45 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:18:35 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+void	init_line(t_line *line, t_point p0, t_point p1);
+void	draw_line(t_line *line, t_map *map);
 
 void	error(void)
 {
@@ -41,6 +44,19 @@ int32_t	main(void)
 	init_view(&view, &map);
 	map.view = view;
 
+	int i = 0;
+	while (i < map.height)
+	{
+		int j = 0;
+		while (j < map.width)
+		{
+			map.points[i][j].x = map.points[i][j].x * view.zoom + view.width_offset;
+			map.points[i][j].y = map.points[i][j].y * view.zoom + view.height_offset;
+			map.points[i][j].z = map.points[i][j].z * view.zoom + view.height_offset;
+			j++;
+		}
+		i++;
+	}
 	
 	// Start mlx
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "Test", true);
@@ -48,6 +64,7 @@ int32_t	main(void)
         error();
 	
 	mlx_key_hook(mlx, &fdf_keyhook, &map);
+	mlx_scroll_hook(mlx, &fdf_scrollhook, &map);
 
 	// Create a new image
 	mlx_image_t* img = mlx_new_image(mlx, WIDTH, HEIGHT);
@@ -55,7 +72,7 @@ int32_t	main(void)
 		error();
 	map.img = img;
 
-	int i = 0;
+	i = 0;
 	while (i < map.height)
 	{
 		int j = 0;
@@ -67,7 +84,10 @@ int32_t	main(void)
 		i++;
 	}
 
-	draw(&map);
+	draw_map(&map);
+	// t_line line;
+	// init_line(&line, map.points[0][map.width - 2], map.points[0][0]);
+	// draw_line(&line, &map);
 	
 	// Display an instance of the image
 	if (mlx_image_to_window(mlx, img, 0, 0) < 0)

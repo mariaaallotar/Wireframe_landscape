@@ -16,7 +16,8 @@ SRCS	= main.c \
 	parse_map.c \
 	linear_transformations.c \
 	hooks.c \
-	pixels_to_img.c
+	pixels_to_img.c 
+
 OBJS	= ${SRCS:.c=.o}
 
 all: libmlx $(LIBFT) $(NAME)

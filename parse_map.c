@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/29 13:07:52 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/30 10:23:04 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ static void	set_point(t_map *map, int x, int y, int z)
 	point.y = y;
 	point.z = z;
 	point.height = z;
+	point.right_edge = 0;
+	if (x == map->width)
+		point.right_edge = 1;
+	point.bottom_edge = 0;
+	if (y == map->height)
+		point.bottom_edge = 1;
 	map->points[y-1][x-1] = point;
 }
 

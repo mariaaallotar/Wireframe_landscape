@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:50:52 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/30 15:19:00 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:48:10 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,27 @@ void	zoom(int zoom, t_map *map)
 	draw_map(map);
 }
 
+void	top_view(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < map->height)
+	{
+		j = 0;
+		while (j < map->width)
+		{
+			rotate_around_x(10, &(map->points[i][j]));
+			rotate_around_y(0, &(map->points[i][j]));
+			rotate_around_z(0, &(map->points[i][j]));
+			j++;
+		}
+		i++;
+	}
+	draw_map(map);
+}
+
 void	fdf_keyhook(mlx_key_data_t keydata, void *param)
 {
 	if (keydata.key == MLX_KEY_RIGHT
@@ -77,6 +98,9 @@ void	fdf_keyhook(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_2
 		&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
 		rotate(-2, param);
+	if (keydata.key == MLX_KEY_T
+		&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+		top_view(param);
 }
 
 void	fdf_scrollhook(double xdelta, double ydelta, void* param)

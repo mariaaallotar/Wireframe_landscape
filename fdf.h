@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/30 15:18:43 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:22:08 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct	s_point
 	int		bottom_edge;
 }	t_point;
 
-typedef struct	s_view
+typedef struct	s_view		//is this necessary?
 {
 	float	zoom;
 	float	width_offset;
@@ -49,6 +49,10 @@ typedef struct	s_map
 {
 	int 		height;
 	int 		width;
+	int			smallest_x;
+	int			biggest_x;
+	int			smallest_y;
+	int			biggest_y;
 	t_point		**points;
 	t_view		view;
 	mlx_image_t	*img;
@@ -73,7 +77,9 @@ typedef struct	s_line
 
 void	get_dimensions(int fd, t_map *map);
 void	parse_map(int fd, t_map *map);
-void	isometric_transformation(t_point *point);
+void	isometric_transformation(t_map *map);
+void	rotate_around_x(float deg, t_point *point);
+void	rotate_around_y(float deg, t_point *point);
 void	rotate_around_z(float deg, t_point *point);
 void	set_zoom_factor(t_view *view, t_map *map);
 void    fdf_keyhook(mlx_key_data_t keydata, void* param);

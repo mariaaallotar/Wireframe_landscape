@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/30 10:23:04 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:23:46 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,14 @@ static void	set_point(t_map *map, int x, int y, int z)
 	point.x = x;
 	point.y = y;
 	point.z = z;
-	point.height = z;
+	if (x < map->smallest_x)
+		map->smallest_x = x;
+	if (x > map->biggest_x)
+		map->biggest_x = x;
+	if (y < map->smallest_y)
+		map->smallest_y = y;
+	if (y > map->biggest_y)
+		map->biggest_y = y;
 	point.right_edge = 0;
 	if (x == map->width)
 		point.right_edge = 1;
@@ -35,13 +42,12 @@ static void	set_point(t_map *map, int x, int y, int z)
 
 static char*	skip_to_next_word(char *line)
 {
-	while (*line != ' ')
-	{
-		if (*line == '\0')
-			return (line);
+	while (*line != '\0' && *line != ' ')
 		line++;
-	}
-	line++;
+	if (*line == '\0')
+		return (line);
+	while (*line != '\0' && *line == ' ')
+		line++;
 	return (line);
 }
 
@@ -98,7 +104,6 @@ void	get_dimensions(int fd, t_map *map)
 	line = get_next_line(fd);
 	if (line == NULL)
 	{
-		printf("In get_dimensions error\n");
 		error();
 	}
 	height++;

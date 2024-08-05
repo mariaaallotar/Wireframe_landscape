@@ -23,9 +23,9 @@
 #include "MLX42/MLX42.h"
 #include "libft/libft.h"
 
-#define WIDTH 1800
-#define HEIGHT 1200
-#define M_PI 3.14159265358979323846
+# ifndef M_PI
+#  define M_PI 3.14159265358979323846
+# endif
 
 typedef struct	s_point
 {
@@ -54,9 +54,16 @@ typedef struct	s_map
 	int			smallest_y;
 	int			biggest_y;
 	t_point		**points;
+}	t_map;
+
+typedef struct	fdf
+{
 	t_view		view;
 	mlx_image_t	*img;
-}	t_map;
+	t_map		map;
+	int32_t		win_height;
+	int32_t		win_width;
+}	t_fdf;
 
 typedef struct	s_line
 {
@@ -81,10 +88,10 @@ void	isometric_transformation(t_map *map);
 void	rotate_around_x(float deg, t_point *point);
 void	rotate_around_y(float deg, t_point *point);
 void	rotate_around_z(float deg, t_point *point);
-void	set_zoom_factor(t_view *view, t_map *map);
+void	set_zoom_factor(t_fdf *fdf);
 void    fdf_keyhook(mlx_key_data_t keydata, void* param);
 void	fdf_scrollhook(double xdelta, double ydelta, void* param);
-void	draw_map(t_map *map);
+void	draw_map(t_fdf *fdf);
 void	error(void);
 
 

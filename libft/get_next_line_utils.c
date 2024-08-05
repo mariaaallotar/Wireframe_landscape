@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 char	*mod_substr(char *str, int start_i, char end_char)
 {
@@ -57,20 +57,6 @@ int	findchr(char *str, char c)
 	if (str[i] == c)
 		return (i);
 	return (-1);
-}
-
-void	*ft_memset(void *s, int c, size_t len)
-{
-	unsigned char	*str;
-
-	str = (unsigned char *) s;
-	while (len > 0)
-	{
-		*str = (unsigned char) c;
-		str++;
-		len--;
-	}
-	return (s);
 }
 
 size_t	ft_strlen(const char *s)

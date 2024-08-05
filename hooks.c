@@ -12,70 +12,70 @@
 
 #include "fdf.h"
 
-void	move(int x, int y, t_map *map)
+void	move(int x, int y, t_fdf *fdf)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < map->height)
+	while (i < fdf->map.height)
 	{
 		j = 0;
-		while (j < map->width)
+		while (j < fdf->map.width)
 		{
-			map->points[i][j].x += x;
-			map->points[i][j].y += y;
+			fdf->map.points[i][j].x += x;
+			fdf->map.points[i][j].y += y;
 			j++;
 		}
 		i++;
 	}
-	draw_map(map);
+	draw_map(fdf);
 }
 
-void	rotate(int deg, t_map *map)
+void	rotate(int deg, t_fdf *fdf)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < map->height)
+	while (i < fdf->map.height)
 	{
 		j = 0;
-		while (j < map->width)
+		while (j < fdf->map.width)
 		{
-			rotate_around_z(deg, &(map->points[i][j]));
+			rotate_around_z(deg, &(fdf->map.points[i][j]));
 			j++;
 		}
 		i++;
 	}
-	draw_map(map);
+	draw_map(fdf);
 }
 
-void	zoom(int zoom, t_map *map)
+void	zoom(int zoom, t_fdf *fdf)
 {
-	map->view.zoom += zoom;
-	draw_map(map);
+	fdf->view.zoom += zoom;
+	draw_map(fdf);
 }
 
-void	top_view(t_map *map)
+void	top_view(t_fdf *fdf)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < map->height)
+	while (i < fdf->map.height)
 	{
 		j = 0;
-		while (j < map->width)
+		while (j < fdf->map.width)
 		{
-			rotate_around_x(10, &(map->points[i][j]));
-			rotate_around_y(0, &(map->points[i][j]));
-			rotate_around_z(0, &(map->points[i][j]));
+			rotate_around_x(10, &(fdf->map.points[i][j]));
+			rotate_around_y(0, &(fdf->map.points[i][j]));
+			rotate_around_z(0, &(fdf->map.points[i][j]));
 			j++;
 		}
 		i++;
 	}
-	draw_map(map);
+	draw_map(fdf);
 }
 
 void	fdf_keyhook(mlx_key_data_t keydata, void *param)

@@ -12,17 +12,17 @@
 
 #include "fdf.h"
 
-void	set_zoom_factor(t_view *view, t_map *map)
+void	set_zoom_factor(t_fdf *fdf)
 {
 	int	width_zoom;
 	int	height_zoom;
 
-	width_zoom = (WIDTH - (2 * 300)) / map->width;
-	height_zoom = (HEIGHT - (2 * 300)) / map->height;
+	width_zoom = (fdf->win_width - (2 * 300)) / fdf->map.width;
+	height_zoom = (fdf->win_height - (2 * 300)) / fdf->map.height;
 	if (height_zoom < width_zoom)
-		view->zoom = height_zoom;
+		fdf->view.zoom = height_zoom;
 	else
-		view->zoom = width_zoom;
+		fdf->view.zoom = width_zoom;
 }
 
 void	rotate_around_x(float deg, t_point *point)

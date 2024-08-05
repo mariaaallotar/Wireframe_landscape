@@ -18,35 +18,43 @@ void	error(void)
 	exit(EXIT_FAILURE);
 }
 
-void	add_hooks(mlx_t *mlx, t_map *map)
+void	add_hooks(mlx_t *mlx, t_fdf *fdf)
 {
-	mlx_key_hook(mlx, &fdf_keyhook, map);
-	mlx_scroll_hook(mlx, &fdf_scrollhook, map);
+	mlx_key_hook(mlx, &fdf_keyhook, fdf);
+	mlx_scroll_hook(mlx, &fdf_scrollhook, fdf);
 }
 
-static void	init_view(t_map *map)
+static void	init_view(t_fdf *fdf)
 {
 	t_view	view;
+	t_point	**points;
 	int		i;
 	int		j;
 
-	set_zoom_factor(&view, map);
+	set_zoom_factor(fdf);
+	//TODO fix offsets
+	// printf("After set zoom\n");
 	view.height_offset = 20;
-	view.width_offset = WIDTH / 2;
-	map->view = view;
+	view.width_offset = fdf->win_width / 2;
+	fdf->view = view;
+	points = fdf->map.points;
 	i = 0;
-	while (i < map->height)
+	while (i < fdf->map.height)
 	{
+		// printf("i is %i, in init view\n", i);
 		j = 0;
-		while (j < map->width)
+		while (j < fdf->map.width)
 		{
-			map->points[i][j].x = map->points[i][j].x * view.zoom + view.width_offset;
-			map->points[i][j].y = map->points[i][j].y * view.zoom + view.height_offset;
-			map->points[i][j].z = map->points[i][j].z * view.zoom + view.height_offset;
+			// printf("j is %i, in init view\n", j);
+			// printf("First point memoryplace: %p", &(fdf->map.points[i][j]));
+			points[i][j].x = points[i][j].x * view.zoom + view.width_offset;	//This segfaults
+			points[i][j].y = points[i][j].y * view.zoom + view.height_offset;
+			points[i][j].z = points[i][j].z * view.zoom + view.height_offset;
 			j++;
 		}
 		i++;
 	}
+	// printf("Exiting init_view\n");
 }
 
 static void	init_map(t_map *map, char *file)
@@ -57,8 +65,12 @@ static void	init_map(t_map *map, char *file)
 	//TODO handle wrong file or permissions error
 	get_dimensions(fd, map);
 
+
+
 	int height = map->height;
 	int width = map->width;
+	// printf("Map height %i, width %i\n", map->height, map->width);
+
 
 	map->points = malloc (map->height * sizeof(t_point*));
 	if (map->points == NULL)
@@ -72,44 +84,77 @@ static void	init_map(t_map *map, char *file)
 	parse_map(fd, map);
 }
 
-static mlx_t*	init_mlx(t_map *map)
+static mlx_t*	init_mlx(t_fdf *fdf)
 {
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 
-	mlx = mlx_init(WIDTH, HEIGHT, "FDF", false);
+
+	mlx = mlx_init(1, 1, "JUST TO INIT GLWF", false);
 	if (!mlx)
         error();
-	img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	mlx_get_monitor_size(0, &(fdf->win_width), &(fdf->win_height));
+
+
+	printf("Monitor height %i, width %i\n", fdf->win_height, fdf->win_width);
+
+
+	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", false);
+	if (!mlx)
+        error();
+	img = mlx_new_image(mlx, fdf->win_width, fdf->win_height);
 	if (!img)
 		error();
-	map->img = img;
+	fdf->img = img;
 	return (mlx);
 }
+	//DEBUG
+	void	init_line(t_line *line, t_point p0, t_point p1);
+	void	draw_line(t_line *line, t_fdf *fdf);
 
 int	main(int argc, char *argv[])
 {
-	t_map		map;
-	mlx_t		*mlx;
+	t_fdf	fdf;
+	mlx_t	*mlx;
+	t_map	map;
 
 	if (argc != 2)
 	{
 		ft_printf("This program takes only one argument: a name of a file ending in '.fdf'.\n");
 		return (1);
 	}
-	init_map(&map, argv[1]);
-	init_view(&map);
-	mlx = init_mlx(&map);
-	isometric_transformation(&map);
-	draw_map(&map);
-	add_hooks(mlx, &map);
-	if (mlx_image_to_window(mlx, map.img, 0, 0) < 0)
+	mlx = init_mlx(&fdf);
+	// printf("MLX initialized\n");
+
+
+	fdf.map = map;
+	init_map(&(fdf.map), argv[1]);
+
+
+	// printf("Map initialized and parsed\n");
+	init_view(&fdf);
+	// printf("View initialized\n");
+	isometric_transformation(&(fdf.map));
+	// printf("Iso done\n");
+	draw_map(&fdf);
+	// printf("Map drawn\n");
+
+
+	//DEBUG
+	t_line	line;
+	init_line(&line, fdf.map.points[1][1], fdf.map.points[5][5]);
+	draw_line(&line, &fdf);
+	// printf("Line drawn\n");
+
+	add_hooks(mlx, &fdf);
+	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
         error();
+	// printf("Image to window\n");
 	mlx_loop(mlx);
 
 	//TODO
 	// Optional, terminate will clean up any leftovers, this is just to demonstrate.
-	mlx_delete_image(mlx, map.img);
+	mlx_delete_image(mlx, fdf.img);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }

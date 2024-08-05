@@ -17,7 +17,9 @@
 # include <unistd.h>
 # include <stdint.h>
 # include <stdarg.h>
-# include "get_next_line.h"
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
 void	ft_bzero(void *s, size_t n);
 int		ft_isalnum(int c);
@@ -55,6 +57,9 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+char	*get_next_line(int fd);
+char	*mod_substr(char *str, int start_i, char end_char);
+int		findchr(char *str, char c);
 int		ft_printf(const char *str, ...);
 int		print_char(va_list list);
 int		print_string(va_list list);

@@ -6,11 +6,37 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/31 14:19:13 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/06 16:15:39 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+void	update_max_min_x_y(t_point *point, t_map *map);
+
+
+void	move_full_map_to_screen(t_map *map)
+{
+	int	i;
+	int	j;
+	int	move_x;
+	int	move_y;
+
+	move_x = 0 - map->smallest_x;
+	move_y = 0 - map->smallest_y;
+	i = 0;
+	while (i < map->height)
+	{
+		int j = 0;
+		while (j < map->width)
+		{
+			map->points[i][j].x += move_x;
+			map->points[i][j].y += move_y;
+			update_max_min_x_y(&(map->points[i][j]), map);
+			j++;
+		}
+		i++;
+	}
+}
 
 void	error(void)
 {
@@ -33,28 +59,24 @@ static void	init_view(t_fdf *fdf)
 
 	set_zoom_factor(fdf);
 	//TODO fix offsets
-	// printf("After set zoom\n");
-	view.height_offset = 20;
-	view.width_offset = fdf->win_width / 2;
-	fdf->view = view;
+	view = fdf->view;
+	view.height_offset = (fdf->win_height - (fdf->map.biggest_y * view.zoom - fdf->map.smallest_y * view.zoom)) / 2;
+	view.width_offset = (fdf->win_width - (fdf->map.biggest_x * view.zoom - fdf->map.smallest_x * view.zoom)) / 2;
 	points = fdf->map.points;
 	i = 0;
 	while (i < fdf->map.height)
 	{
-		// printf("i is %i, in init view\n", i);
 		j = 0;
 		while (j < fdf->map.width)
 		{
-			// printf("j is %i, in init view\n", j);
-			// printf("First point memoryplace: %p", &(fdf->map.points[i][j]));
-			points[i][j].x = points[i][j].x * view.zoom + view.width_offset;	//This segfaults
+			points[i][j].x = points[i][j].x * view.zoom + view.width_offset;
 			points[i][j].y = points[i][j].y * view.zoom + view.height_offset;
-			points[i][j].z = points[i][j].z * view.zoom + view.height_offset;
+			points[i][j].z = points[i][j].z * view.zoom;
+			update_max_min_x_y(&(points[i][j]), &(fdf->map));
 			j++;
 		}
 		i++;
 	}
-	// printf("Exiting init_view\n");
 }
 
 static void	init_map(t_map *map, char *file)
@@ -64,14 +86,6 @@ static void	init_map(t_map *map, char *file)
 	fd = open(file, O_RDONLY);
 	//TODO handle wrong file or permissions error
 	get_dimensions(fd, map);
-
-
-
-	int height = map->height;
-	int width = map->width;
-	// printf("Map height %i, width %i\n", map->height, map->width);
-
-
 	map->points = malloc (map->height * sizeof(t_point*));
 	if (map->points == NULL)
 		error();
@@ -94,11 +108,8 @@ static mlx_t*	init_mlx(t_fdf *fdf)
 	if (!mlx)
         error();
 	mlx_get_monitor_size(0, &(fdf->win_width), &(fdf->win_height));
-
-
-	printf("Monitor height %i, width %i\n", fdf->win_height, fdf->win_width);
-
-
+	mlx_terminate(mlx);
+	mlx = NULL;
 	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", false);
 	if (!mlx)
         error();
@@ -108,9 +119,6 @@ static mlx_t*	init_mlx(t_fdf *fdf)
 	fdf->img = img;
 	return (mlx);
 }
-	//DEBUG
-	void	init_line(t_line *line, t_point p0, t_point p1);
-	void	draw_line(t_line *line, t_fdf *fdf);
 
 int	main(int argc, char *argv[])
 {
@@ -124,32 +132,15 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	mlx = init_mlx(&fdf);
-	// printf("MLX initialized\n");
-
-
 	fdf.map = map;
 	init_map(&(fdf.map), argv[1]);
-
-
-	// printf("Map initialized and parsed\n");
-	init_view(&fdf);
-	// printf("View initialized\n");
 	isometric_transformation(&(fdf.map));
-	// printf("Iso done\n");
+	move_full_map_to_screen(&(fdf.map));
+	init_view(&fdf);
 	draw_map(&fdf);
-	// printf("Map drawn\n");
-
-
-	//DEBUG
-	t_line	line;
-	init_line(&line, fdf.map.points[1][1], fdf.map.points[5][5]);
-	draw_line(&line, &fdf);
-	// printf("Line drawn\n");
-
 	add_hooks(mlx, &fdf);
 	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
         error();
-	// printf("Image to window\n");
 	mlx_loop(mlx);
 
 	//TODO

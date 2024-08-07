@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:53:43 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 11:50:18 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:06:03 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	set_zoom_factor(t_fdf *fdf)
 		fdf->view.zoom = height_zoom;
 	else
 		fdf->view.zoom = width_zoom;
-	printf("Zoom is %f\n", fdf->view.zoom);
 }
 
 /*

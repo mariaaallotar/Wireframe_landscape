@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/31 14:22:08 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:56:37 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	rotate_around_x(float deg, t_point *point);
 void	rotate_around_y(float deg, t_point *point);
 void	rotate_around_z(float deg, t_point *point);
 void	set_zoom_factor(t_fdf *fdf);
+void	update_max_min_x_y(t_point *point, t_map *map);
 void    fdf_keyhook(mlx_key_data_t keydata, void* param);
 void	fdf_scrollhook(double xdelta, double ydelta, void* param);
 void	draw_map(t_fdf *fdf);

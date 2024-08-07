@@ -6,37 +6,59 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 12:05:07 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:04:19 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-void	update_max_min_x_y(t_point *point, t_map *map);
-
 
 void	center_map(t_fdf *fdf)
 {
-	int	i;
-	int	j;
-	int	move_x;
-	int	move_y;
+	// int	i;
+	// int	j;
+	// int	move_x;
+	// int	move_y;
 
-	move_x = 5;
-	while(move_x + fdf->map.biggest_x < (fdf->win_width / 2 + (fdf->map.biggest_x - fdf->map.smallest_x) / 2))
-		move_x += 5;
-	move_y = 3;
-	while(move_y + fdf->map.biggest_y < (fdf->win_height / 2 + (fdf->map.biggest_y - fdf->map.smallest_y) / 2))
-		move_y += 3;
-	printf("move_x %i, move_y %i\n", move_x, move_y);
-	i = 0;
+	// move_x = 5;
+	// while(move_x + fdf->map.biggest_x < (fdf->win_width / 2 + (fdf->map.biggest_x - fdf->map.smallest_x) / 2))
+	// 	move_x += 5;
+	// move_y = 3;
+	// while(move_y + fdf->map.biggest_y < (fdf->win_height / 2 + (fdf->map.biggest_y - fdf->map.smallest_y) / 2))
+	// 	move_y += 3;
+	// i = 0;
+	// while (i < fdf->map.height)
+	// {
+	// 	j = 0;
+	// 	while (j < fdf->map.width)
+	// 	{
+	// 		fdf->map.points[i][j].x += move_x;
+	// 		fdf->map.points[i][j].y += move_y;
+	// 		update_max_min_x_y(&(fdf->map.points[i][j]), &(fdf->map));
+	// 		j++;
+	// 	}
+	// 	i++;
+	// }
+
+	//chatgpt way
+
+	int x_center = (fdf->map.smallest_x + fdf->map.biggest_x) / 2;
+    int y_center = (fdf->map.smallest_y + fdf->map.biggest_y) / 2;
+    
+    int x_screen_center = fdf->win_width / 2;
+    int y_screen_center = fdf->win_height / 2;
+    
+    int delta_x = x_screen_center - x_center;
+    int delta_y = y_screen_center - y_center;
+
+	int i = 0;
+	printf("delta_x %i, delta_y %i\n", delta_x, delta_y);
 	while (i < fdf->map.height)
 	{
 		int j = 0;
 		while (j < fdf->map.width)
 		{
-			fdf->map.points[i][j].x += move_x;
-			fdf->map.points[i][j].y += move_y;
-			printf("Offset point x %f y %f\n", fdf->map.points[i][j].x, fdf->map.points[i][j].y);
+			fdf->map.points[i][j].x += delta_x;
+			fdf->map.points[i][j].y += delta_y;
 			update_max_min_x_y(&(fdf->map.points[i][j]), &(fdf->map));
 			j++;
 		}
@@ -53,7 +75,6 @@ void	error(void)
 void	add_hooks(mlx_t *mlx, t_fdf *fdf)
 {
 	mlx_key_hook(mlx, &fdf_keyhook, fdf);
-	mlx_scroll_hook(mlx, &fdf_scrollhook, fdf);
 }
 
 void	set_offsets(t_fdf *fdf)
@@ -77,10 +98,10 @@ static void	init_view(t_fdf *fdf)
 		j = 0;
 		while (j < fdf->map.width)
 		{
+			//extract this to its own function that is also used by zoom hook?
 			points[i][j].x = points[i][j].x * view.zoom;
 			points[i][j].y = points[i][j].y * view.zoom;
 			points[i][j].z = points[i][j].z * view.zoom;
-			printf("Zoomed point x %f y %f\n", fdf->map.points[i][j].x, fdf->map.points[i][j].y);
 			update_max_min_x_y(&(points[i][j]), &(fdf->map));
 			j++;
 		}
@@ -112,14 +133,11 @@ static mlx_t*	init_mlx(t_fdf *fdf)
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 
-
 	mlx = mlx_init(1, 1, "JUST TO INIT GLWF", false);
 	if (!mlx)
         error();
 	mlx_get_monitor_size(0, &(fdf->win_width), &(fdf->win_height));
 	fdf->win_height -= 80;
-	printf("Win height %i, width %i", fdf->win_height, fdf->win_width);
-
 	mlx_terminate(mlx);
 	mlx = NULL;
 	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", false);

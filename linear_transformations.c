@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:53:43 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/06 15:50:10 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:50:18 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ void	update_max_min_x_y(t_point *point, t_map *map)
 {
 	if (point->x < map->smallest_x)
 		map->smallest_x = point->x;
-	if (point->x > map->biggest_x)
+	else if (point->x > map->biggest_x)
 		map->biggest_x = point->x;
 	if (point->y < map->smallest_y)
 		map->smallest_y = point->y;
-	if (point->y > map->biggest_y)
+	else if (point->y > map->biggest_y)
 		map->biggest_y = point->y;
 }
 

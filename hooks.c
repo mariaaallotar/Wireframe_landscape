@@ -6,14 +6,13 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:50:52 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 14:51:45 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:23:11 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-void	center_map(t_fdf *fdf);
 
-void	move(int x, int y, t_fdf *fdf)
+static void	move(int x, int y, t_fdf *fdf)
 {
 	int	i;
 	int	j;
@@ -34,8 +33,9 @@ void	move(int x, int y, t_fdf *fdf)
 	draw_map(fdf);
 }
 
-void	tilt_x(int deg, t_fdf *fdf)
+static void	tilt_x(int deg, t_fdf *fdf)
 {
+	//centering does not work
 	int	i;
 	int	j;
 
@@ -51,11 +51,13 @@ void	tilt_x(int deg, t_fdf *fdf)
 		}
 		i++;
 	}
+	center_map(fdf);
 	draw_map(fdf);
 }
 
-void	tilt_y(int deg, t_fdf *fdf)
+static void	tilt_y(int deg, t_fdf *fdf)
 {
+	//centering does not work
 	int	i;
 	int	j;
 
@@ -75,8 +77,9 @@ void	tilt_y(int deg, t_fdf *fdf)
 	draw_map(fdf);
 }
 
-void	rotate(int deg, t_fdf *fdf)
+static void	rotate(int deg, t_fdf *fdf)
 {
+	//does not rotate the way we expect now
 	int	i;
 	int	j;
 
@@ -95,34 +98,9 @@ void	rotate(int deg, t_fdf *fdf)
 	draw_map(fdf);
 }
 
-// void	zoom(int zoom, t_fdf *fdf)
-// {
-// 	int		i;
-// 	int		j;
-// 	t_point	**points;
-
-// 	fdf->view.zoom += zoom;
-// 	points = fdf->map.points;
-// 	i = 0;
-// 	while (i < fdf->map.height)
-// 	{
-// 		j = 0;
-// 		while (j < fdf->map.width)
-// 		{
-// 			points[i][j].x = points[i][j].x + fdf->view.zoom;
-// 			points[i][j].y = points[i][j].y + fdf->view.zoom;
-// 			points[i][j].z = points[i][j].z + fdf->view.zoom;
-// 			update_max_min_x_y(&(points[i][j]), &(fdf->map));
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	center_map(fdf);
-// 	draw_map(fdf);
-// }
-
-void	random_translation(t_fdf *fdf)
+static void	random_translation(t_fdf *fdf)
 {
+	//actually have this?
 	int	i;
 	int	j;
 
@@ -144,6 +122,7 @@ void	random_translation(t_fdf *fdf)
 
 void	fdf_keyhook(mlx_key_data_t keydata, void *param)
 {
+	//TODO check that all keys work the way as expected
 	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
 		move(40, 0, param);
 	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
@@ -154,8 +133,7 @@ void	fdf_keyhook(mlx_key_data_t keydata, void *param)
 		move(0, 40, param);
 	if (keydata.key == MLX_KEY_1 && keydata.action == MLX_PRESS)
 		rotate(2, param);
-	if (keydata.key == MLX_KEY_2
-		&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT))
+	if (keydata.key == MLX_KEY_2 && keydata.action == MLX_PRESS)
 		rotate(-2, param);
 	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
 		tilt_x(2, param);
@@ -167,4 +145,9 @@ void	fdf_keyhook(mlx_key_data_t keydata, void *param)
 		tilt_y(-2, param);
 	if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
 		random_translation(param);
+}
+
+void	add_hooks(mlx_t *mlx, t_fdf *fdf)
+{
+	mlx_key_hook(mlx, &fdf_keyhook, fdf);
 }

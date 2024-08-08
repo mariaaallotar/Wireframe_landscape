@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 12:56:37 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:20:51 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,6 @@ typedef struct	s_line
 	int	d;
 }	t_line;
 
-
-
 void	get_dimensions(int fd, t_map *map);
 void	parse_map(int fd, t_map *map);
 void	isometric_transformation(t_map *map);
@@ -90,8 +88,8 @@ void	rotate_around_y(float deg, t_point *point);
 void	rotate_around_z(float deg, t_point *point);
 void	set_zoom_factor(t_fdf *fdf);
 void	update_max_min_x_y(t_point *point, t_map *map);
-void    fdf_keyhook(mlx_key_data_t keydata, void* param);
-void	fdf_scrollhook(double xdelta, double ydelta, void* param);
+void	center_map(t_fdf *fdf);
+void	add_hooks(mlx_t *mlx, t_fdf *fdf);
 void	draw_map(t_fdf *fdf);
 void	error(void);
 

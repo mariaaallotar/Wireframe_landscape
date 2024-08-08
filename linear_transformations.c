@@ -6,56 +6,11 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:53:43 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 14:06:03 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:04:08 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	update_max_min_x_y(t_point *point, t_map *map)
-{
-	if (point->x < map->smallest_x)
-		map->smallest_x = point->x;
-	else if (point->x > map->biggest_x)
-		map->biggest_x = point->x;
-	if (point->y < map->smallest_y)
-		map->smallest_y = point->y;
-	else if (point->y > map->biggest_y)
-		map->biggest_y = point->y;
-}
-
-void	set_zoom_factor(t_fdf *fdf)
-{
-	int	width_zoom;
-	int	height_zoom;
-	int	zoomed_x0;
-	int	zoomed_x1;
-	int	zoomed_y0;
-	int	zoomed_y1;
-
-	width_zoom = 1;
-	zoomed_x0 = fdf->map.smallest_x;
-	zoomed_x1= fdf->map.biggest_x;
-	while (abs(zoomed_x1 - zoomed_x0) < (fdf->win_width - 200))
-	{
-		width_zoom++;
-		zoomed_x0 = fdf->map.biggest_x * width_zoom;
-		zoomed_x1 = fdf->map.smallest_x * width_zoom;
-	}
-	height_zoom = 1;
-	zoomed_y0 = fdf->map.smallest_y;
-	zoomed_y1 = fdf->map.biggest_y;
-	while (abs(zoomed_y1 - zoomed_y0) < (fdf->win_height - 200))
-	{
-		height_zoom++;
-		zoomed_y0 = fdf->map.biggest_y * height_zoom;
-		zoomed_y1 = fdf->map.smallest_y * height_zoom;
-	}
-	if (height_zoom < width_zoom)
-		fdf->view.zoom = height_zoom;
-	else
-		fdf->view.zoom = width_zoom;
-}
 
 /*
 * Rotates from the current position!
@@ -109,7 +64,7 @@ void	isometric_transformation(t_map *map)
 	i = 0;
 	while (i < map->height)
 	{
-		int j = 0;
+		j = 0;
 		while (j < map->width)
 		{
 			rotate_around_z(45, &(map->points[i][j]));

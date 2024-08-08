@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:52:38 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/24 11:19:09 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 12:07:00 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdint.h>
 # include <stdarg.h>
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 1500
 # endif
 
 void	ft_bzero(void *s, size_t n);

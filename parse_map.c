@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/07/31 14:23:46 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 15:22:15 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,10 @@ static void	set_point(t_map *map, int x, int y, int z)
 {
 	t_point	point;
 
-	//DEBUG
-	float new_x = x;
-	float new_y = y;
-
 	point.x = x;
 	point.y = y;
 	point.z = z;
-	if (x < map->smallest_x)
-		map->smallest_x = x;
-	if (x > map->biggest_x)
-		map->biggest_x = x;
-	if (y < map->smallest_y)
-		map->smallest_y = y;
-	if (y > map->biggest_y)
-		map->biggest_y = y;
+	update_max_min_x_y(&point, map);
 	point.right_edge = 0;
 	if (x == map->width)
 		point.right_edge = 1;
@@ -51,16 +40,42 @@ static char*	skip_to_next_word(char *line)
 	return (line);
 }
 
+void	free_points(int row_index, t_map *map)
+{
+	int	i;
+
+	while (row_index >= 0)
+	{
+		if (map->points[row_index] == NULL)
+		{
+			row_index--;
+			continue ;
+		}
+		i = map->width - 1;
+		while (i >= 0)
+		{
+			if (&(map->points[row_index][i]) != NULL)
+				free(&(map->points[row_index][i]));
+			i--;
+		}
+		free(map->points[row_index]);
+		row_index--;
+	}
+}
+
 static void	populate_map(int i, char *line, t_map *map)
 {
 	int	j;
 
+	printf("Map width: %i\n", map->width);
 	map->points[i-1] = malloc (map->width * sizeof (t_point));
 	if (map->points[i-1] == NULL)
 	{
-		//free_points();
+		free(line);
+		free_points(i - 1, map);
 		error();
 	}
+	printf("Populate map malloc passed\n");
 	j = 1;
 	while (*line != '\0')
 	{
@@ -68,6 +83,7 @@ static void	populate_map(int i, char *line, t_map *map)
 		line = skip_to_next_word(line);
 		j++;
 	}
+	printf("Exiting populate map\n");
 }
 
 void	parse_map(int fd, t_map *map)
@@ -78,18 +94,17 @@ void	parse_map(int fd, t_map *map)
 	i = 1;
 	while (i <= map->height)
 	{
+		printf("I is %i\n", i);
 		line = get_next_line(fd);
+		printf("After gnl\n");
 		if (line == NULL)
 		{
-			if (errno != 0)
-			{
-				free(map->points);
-				error();
-			}
-			return ;
+			free_points(i - 1, map);
+			error();
 		}
 		populate_map(i, line, map);
 		free(line);
+		printf("Free did not fail\n");
 		i++;
 	}
 	return ;
@@ -108,7 +123,13 @@ void	get_dimensions(int fd, t_map *map)
 	}
 	height++;
 	map->width = ft_count_words(line);
-	while (get_next_line(fd) != NULL)
+	free(line);
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
 		height++;
+		free(line);
+		line = get_next_line(fd);
+	}
 	map->height = height;
 }

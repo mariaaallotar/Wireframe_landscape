@@ -1,6 +1,6 @@
 NAME	= fdf
 CC		= clang -g
-#CFLAGS	= -Wextra -Wall -Werror
+CFLAGS	= -Wextra -Wall -Werror
 LIBMLX	= ./MLX42
 
 LIBFT = libft/libft.a
@@ -16,7 +16,8 @@ SRCS	= main.c \
 	parse_map.c \
 	linear_transformations.c \
 	hooks.c \
-	pixels_to_img.c 
+	pixels_to_img.c \
+	view.c
 
 OBJS	= ${SRCS:.c=.o}
 

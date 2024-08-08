@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 15:02:57 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/06 14:33:58 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:21:24 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	draw_map(t_fdf *fdf)
 			{
 				init_line(&line, fdf->map.points[i][j], fdf->map.points[i + 1][j]);
 				draw_line(&line, fdf);
-			} 
+			}
 			j++;
 		}
 		i++;

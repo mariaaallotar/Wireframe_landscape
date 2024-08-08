@@ -6,80 +6,16 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/07 15:04:19 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:38:40 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	center_map(t_fdf *fdf)
-{
-	// int	i;
-	// int	j;
-	// int	move_x;
-	// int	move_y;
-
-	// move_x = 5;
-	// while(move_x + fdf->map.biggest_x < (fdf->win_width / 2 + (fdf->map.biggest_x - fdf->map.smallest_x) / 2))
-	// 	move_x += 5;
-	// move_y = 3;
-	// while(move_y + fdf->map.biggest_y < (fdf->win_height / 2 + (fdf->map.biggest_y - fdf->map.smallest_y) / 2))
-	// 	move_y += 3;
-	// i = 0;
-	// while (i < fdf->map.height)
-	// {
-	// 	j = 0;
-	// 	while (j < fdf->map.width)
-	// 	{
-	// 		fdf->map.points[i][j].x += move_x;
-	// 		fdf->map.points[i][j].y += move_y;
-	// 		update_max_min_x_y(&(fdf->map.points[i][j]), &(fdf->map));
-	// 		j++;
-	// 	}
-	// 	i++;
-	// }
-
-	//chatgpt way
-
-	int x_center = (fdf->map.smallest_x + fdf->map.biggest_x) / 2;
-    int y_center = (fdf->map.smallest_y + fdf->map.biggest_y) / 2;
-    
-    int x_screen_center = fdf->win_width / 2;
-    int y_screen_center = fdf->win_height / 2;
-    
-    int delta_x = x_screen_center - x_center;
-    int delta_y = y_screen_center - y_center;
-
-	int i = 0;
-	printf("delta_x %i, delta_y %i\n", delta_x, delta_y);
-	while (i < fdf->map.height)
-	{
-		int j = 0;
-		while (j < fdf->map.width)
-		{
-			fdf->map.points[i][j].x += delta_x;
-			fdf->map.points[i][j].y += delta_y;
-			update_max_min_x_y(&(fdf->map.points[i][j]), &(fdf->map));
-			j++;
-		}
-		i++;
-	}
-}
-
 void	error(void)
 {
 	puts(mlx_strerror(mlx_errno));
 	exit(EXIT_FAILURE);
-}
-
-void	add_hooks(mlx_t *mlx, t_fdf *fdf)
-{
-	mlx_key_hook(mlx, &fdf_keyhook, fdf);
-}
-
-void	set_offsets(t_fdf *fdf)
-{
-	
 }
 
 static void	init_view(t_fdf *fdf)
@@ -98,7 +34,6 @@ static void	init_view(t_fdf *fdf)
 		j = 0;
 		while (j < fdf->map.width)
 		{
-			//extract this to its own function that is also used by zoom hook?
 			points[i][j].x = points[i][j].x * view.zoom;
 			points[i][j].y = points[i][j].y * view.zoom;
 			points[i][j].z = points[i][j].z * view.zoom;
@@ -116,9 +51,11 @@ static void	init_map(t_map *map, char *file)
 	fd = open(file, O_RDONLY);
 	//TODO handle wrong file or permissions error
 	get_dimensions(fd, map);
+	printf("Height of map: %i\n", map->height);
 	map->points = malloc (map->height * sizeof(t_point*));
 	if (map->points == NULL)
 		error();
+	printf("Init map malloc passed\n");
 	close (fd);
 	fd = open(file, O_RDONLY);
 	map->smallest_x = INT32_MAX;
@@ -150,11 +87,12 @@ static mlx_t*	init_mlx(t_fdf *fdf)
 	return (mlx);
 }
 
+void	free_points(int row_index, t_map *map);
+
 int	main(int argc, char *argv[])
 {
 	t_fdf	fdf;
 	mlx_t	*mlx;
-	t_map	map;
 
 	if (argc != 2)
 	{
@@ -162,20 +100,25 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	mlx = init_mlx(&fdf);
-	fdf.map = map;
 	init_map(&(fdf.map), argv[1]);
+	printf("Init map passed\n");
 	isometric_transformation(&(fdf.map));
+	printf("Iso done\n");
 	init_view(&fdf);
+	printf("View initialized\n");
 	center_map(&(fdf));
+	printf("Map centered\n");
 	draw_map(&fdf);
+	printf("Map drawn\n");
 	add_hooks(mlx, &fdf);
-	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
-        error();
-	mlx_loop(mlx);
+	// if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
+        // error();
+	// mlx_loop(mlx);
 
 	//TODO
 	// Optional, terminate will clean up any leftovers, this is just to demonstrate.
 	mlx_delete_image(mlx, fdf.img);
 	mlx_terminate(mlx);
+	free_points(fdf.map.height - 1, &(fdf.map));
 	return (EXIT_SUCCESS);
 }

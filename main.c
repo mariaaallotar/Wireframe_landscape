@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/08 14:38:40 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/08 15:30:15 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,9 @@ int	main(int argc, char *argv[])
 	draw_map(&fdf);
 	printf("Map drawn\n");
 	add_hooks(mlx, &fdf);
-	// if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
-        // error();
-	// mlx_loop(mlx);
+	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
+        error();
+	mlx_loop(mlx);
 
 	//TODO
 	// Optional, terminate will clean up any leftovers, this is just to demonstrate.

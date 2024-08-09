@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/08 15:22:15 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:18:08 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	free_points(int row_index, t_map *map)
 				free(&(map->points[row_index][i]));
 			i--;
 		}
-		free(map->points[row_index]);
+		free(&(map->points[row_index]));
 		row_index--;
 	}
 }

@@ -30,7 +30,7 @@ libmlx:
 	$(CC) -g $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS) libft
-	$(CC) -g $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
+	$(CC) -g $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	echo "Should make libft"

@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/09 12:18:08 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:54:11 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ static char*	skip_to_next_word(char *line)
 
 void	free_points(int row_index, t_map *map)
 {
-	int	i;
-
 	while (row_index >= 0)
 	{
 		if (map->points[row_index] == NULL)
@@ -51,23 +49,19 @@ void	free_points(int row_index, t_map *map)
 			row_index--;
 			continue ;
 		}
-		i = map->width - 1;
-		while (i >= 0)
-		{
-			if (&(map->points[row_index][i]) != NULL)
-				free(&(map->points[row_index][i]));
-			i--;
-		}
-		free(&(map->points[row_index]));
+		if (&(map->points[row_index][0]) != NULL)
+			free(&(map->points[row_index][0]));
+
 		row_index--;
 	}
+	free(map->points);
 }
 
 static void	populate_map(int i, char *line, t_map *map)
 {
 	int	j;
 
-	printf("Map width: %i\n", map->width);
+	// printf("Map width: %i\n", map->width);
 	map->points[i-1] = malloc (map->width * sizeof (t_point));
 	if (map->points[i-1] == NULL)
 	{
@@ -75,7 +69,7 @@ static void	populate_map(int i, char *line, t_map *map)
 		free_points(i - 1, map);
 		error();
 	}
-	printf("Populate map malloc passed\n");
+	// printf("Populate map malloc passed\n");
 	j = 1;
 	while (*line != '\0')
 	{
@@ -83,7 +77,7 @@ static void	populate_map(int i, char *line, t_map *map)
 		line = skip_to_next_word(line);
 		j++;
 	}
-	printf("Exiting populate map\n");
+	// printf("Exiting populate map\n");
 }
 
 void	parse_map(int fd, t_map *map)
@@ -94,9 +88,9 @@ void	parse_map(int fd, t_map *map)
 	i = 1;
 	while (i <= map->height)
 	{
-		printf("I is %i\n", i);
+		// printf("I is %i\n", i);
 		line = get_next_line(fd);
-		printf("After gnl\n");
+		// printf("After gnl\n");
 		if (line == NULL)
 		{
 			free_points(i - 1, map);
@@ -104,7 +98,7 @@ void	parse_map(int fd, t_map *map)
 		}
 		populate_map(i, line, map);
 		free(line);
-		printf("Free did not fail\n");
+		// printf("Free did not fail\n");
 		i++;
 	}
 	return ;

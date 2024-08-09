@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/08 15:30:15 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:54:32 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ static void	init_map(t_map *map, char *file)
 	fd = open(file, O_RDONLY);
 	//TODO handle wrong file or permissions error
 	get_dimensions(fd, map);
-	printf("Height of map: %i\n", map->height);
+	// printf("Height of map: %i\n", map->height);
 	map->points = malloc (map->height * sizeof(t_point*));
 	if (map->points == NULL)
 		error();
-	printf("Init map malloc passed\n");
+	// printf("Init map malloc passed\n");
 	close (fd);
 	fd = open(file, O_RDONLY);
 	map->smallest_x = INT32_MAX;
@@ -101,15 +101,15 @@ int	main(int argc, char *argv[])
 	}
 	mlx = init_mlx(&fdf);
 	init_map(&(fdf.map), argv[1]);
-	printf("Init map passed\n");
+	// printf("Init map passed\n");
 	isometric_transformation(&(fdf.map));
-	printf("Iso done\n");
+	// printf("Iso done\n");
 	init_view(&fdf);
-	printf("View initialized\n");
+	// printf("View initialized\n");
 	center_map(&(fdf));
-	printf("Map centered\n");
+	// printf("Map centered\n");
 	draw_map(&fdf);
-	printf("Map drawn\n");
+	// printf("Map drawn\n");
 	add_hooks(mlx, &fdf);
 	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
         error();

@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/08 11:20:51 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:07:42 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	update_max_min_x_y(t_point *point, t_map *map);
 void	center_map(t_fdf *fdf);
 void	add_hooks(mlx_t *mlx, t_fdf *fdf);
 void	draw_map(t_fdf *fdf);
+void	free_points(int row_index, t_map *map);
 void	error(void);
 
 

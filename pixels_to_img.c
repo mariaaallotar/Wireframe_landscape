@@ -6,72 +6,72 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 15:02:57 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 11:15:36 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:10:39 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void    fill_screen(t_fdf *fdf, int color)
+void	fill_screen(t_fdf *fdf, int color)
 {
 	mlx_image_t	*img;
 
 	img = fdf->img;
-    ft_memset(img->pixels, color, img->width * img->height * sizeof(int32_t));
+	ft_memset(img->pixels, color, img->width * img->height * sizeof(int32_t));
 }
 
 void	draw_high_line(t_line *line, t_fdf *fdf)
 {
-    if (line->dx < 0)
+	if (line->dx < 0)
 	{
-        line->xi = -1;
-        line->dx = -line->dx;
+		line->xi = -1;
+		line->dx = -line->dx;
 	}
 	line->d = (2 * line->dx) - line->dy;
 	line->x = line->x0;
 	line->y = line->y0;
-    while (line->y <= line->y1)
+	while (line->y <= line->y1)
 	{
 		if (line->x >= 0 && line->x < fdf->win_width
 			&& line->y >= 0 && line->y < fdf->win_height)
 		{
-        	mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
+			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
 		}
-        if (line->d > 0)
+		if (line->d > 0)
 		{
 			line->x += line->xi;
-            line->d += (2 * (line->dx - line->dy));
+			line->d += (2 * (line->dx - line->dy));
 		}
-        else
-            line->d += 2 * line->dx;
+		else
+			line->d += 2 * line->dx;
 		line->y += 1;
 	}
 }
 
 void	draw_low_line(t_line *line, t_fdf *fdf)
 {
-    if (line->dy < 0)
+	if (line->dy < 0)
 	{
-        line->yi = -1;
-        line->dy = -line->dy;
+		line->yi = -1;
+		line->dy = -line->dy;
 	}
 	line->d = (2 * line->dy) - line->dx;
 	line->x = line->x0;
 	line->y = line->y0;
-    while (line->x <= line->x1)
+	while (line->x <= line->x1)
 	{
-		if (line->x >= 0 && line->x < fdf->win_width 
+		if (line->x >= 0 && line->x < fdf->win_width
 			&& line->y >= 0 && line->y < fdf->win_height)
 		{
-        	mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
+			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
 		}
-        if (line->d > 0)
+		if (line->d > 0)
 		{
 			line->y += line->yi;
-            line->d += (2 * (line->dy - line->dx));
+			line->d += (2 * (line->dy - line->dx));
 		}
-        else
-            line->d += 2 * line->dy;
+		else
+			line->d += 2 * line->dy;
 		line->x += 1;
 	}
 }
@@ -93,27 +93,27 @@ void	draw_line(t_line *line, t_fdf *fdf)
 {
 	if (abs(line->dy) < abs(line->dx))
 	{
-        if (line->x0 > line->x1)
+		if (line->x0 > line->x1)
 		{
 			swap_p0_and_p1(line);
 			line->dx = line->x1 - line->x0;
 			line->dy = line->y1 - line->y0;
-            draw_low_line(line, fdf);
+			draw_low_line(line, fdf);
 		}
-        else
-            draw_low_line(line, fdf);
+		else
+			draw_low_line(line, fdf);
 	}
-    else
+	else
 	{
-        if (line->y0 > line->y1)
+		if (line->y0 > line->y1)
 		{
 			swap_p0_and_p1(line);
 			line->dx = line->x1 - line->x0;
 			line->dy = line->y1 - line->y0;
 			draw_high_line(line, fdf);
 		}
-        else
-            draw_high_line(line, fdf);
+		else
+			draw_high_line(line, fdf);
 	}
 }
 
@@ -126,7 +126,7 @@ void	init_line(t_line *line, t_point p0, t_point p1)
 	line->dx = line->x1 - line->x0;
 	line->dy = line->y1 - line->y0;
 	line->xi = 1;
-    line->yi = 1;
+	line->yi = 1;
 }
 
 void	draw_map(t_fdf *fdf)
@@ -135,7 +135,7 @@ void	draw_map(t_fdf *fdf)
 	int		j;
 	t_line	line;
 
-    fill_screen(fdf, 0xFFFFFF00);
+	fill_screen(fdf, 0xFFFFFF00);
 	i = 0;
 	while (i < fdf->map.height)
 	{

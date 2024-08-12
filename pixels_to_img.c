@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 15:02:57 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 16:10:39 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:27:00 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	init_line(t_line *line, t_point p0, t_point p1)
 	line->yi = 1;
 }
 
-void	draw_map(t_fdf *fdf)
+void	draw_map(t_fdf *fdf, t_map *map)
 {
 	int		i;
 	int		j;
@@ -144,12 +144,12 @@ void	draw_map(t_fdf *fdf)
 		{
 			if (!fdf->map.points[i][j].right_edge)
 			{
-				init_line(&line, fdf->map.points[i][j], fdf->map.points[i][j + 1]);
+				init_line(&line, map->points[i][j], map->points[i][j + 1]);
 				draw_line(&line, fdf);
 			}
 			if (!fdf->map.points[i][j].bottom_edge)
 			{
-				init_line(&line, fdf->map.points[i][j], fdf->map.points[i + 1][j]);
+				init_line(&line, map->points[i][j], map->points[i + 1][j]);
 				draw_line(&line, fdf);
 			}
 			j++;

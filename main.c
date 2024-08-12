@@ -6,15 +6,19 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 12:08:39 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:46:40 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	error(void)
+void	error(t_fdf *fdf, int free_bol)
 {
 	puts(mlx_strerror(mlx_errno));
+	mlx_delete_image(fdf->mlx, fdf->img);
+	mlx_terminate(fdf->mlx);
+	if (free_bol)
+		free_points(fdf->map.height - 1, &(fdf->map));
 	exit(EXIT_FAILURE);
 }
 
@@ -44,7 +48,7 @@ static void	init_view(t_fdf *fdf)
 	}
 }
 
-static void	init_map(t_map *map, char *file)
+static void	init_map(t_fdf *fdf, t_map *map, char *file)
 {
 	int	fd;
 
@@ -53,7 +57,7 @@ static void	init_map(t_map *map, char *file)
 	get_dimensions(fd, map);
 	map->points = malloc (map->height * sizeof (t_point*));
 	if (map->points == NULL)
-		error();
+		error(fdf, 0);
 	close (fd);
 	fd = open(file, O_RDONLY);
 	map->smallest_x = INT32_MAX;
@@ -70,18 +74,19 @@ static mlx_t*	init_mlx(t_fdf *fdf)
 
 	mlx = mlx_init(1, 1, "JUST TO INIT GLWF", false);
 	if (!mlx)
-		error();
+		error(fdf, 0);
 	mlx_get_monitor_size(0, &(fdf->win_width), &(fdf->win_height));
 	fdf->win_height -= 80;
 	mlx_terminate(mlx);
 	mlx = NULL;
 	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", false);
 	if (!mlx)
-		error();
+		error(fdf, 0);
 	img = mlx_new_image(mlx, fdf->win_width, fdf->win_height);
 	if (!img)
-		error();
+		error(fdf, 0);
 	fdf->img = img;
+	fdf->mlx = mlx;
 	return (mlx);
 }
 
@@ -96,14 +101,14 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	mlx = init_mlx(&fdf);
-	init_map(&(fdf.map), argv[1]);
+	init_map(&fdf, &(fdf.map), argv[1]);
 	isometric_transformation(&(fdf.map));
 	init_view(&fdf);
 	center_map(&(fdf));
-	draw_map(&fdf);
+	draw_map(&fdf, &(fdf.map));
 	add_hooks(mlx, &fdf);
 	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
-        error();
+        error(&fdf, 1);
 	mlx_loop(mlx);
 	//TODO
 	// Optional, terminate will clean up any leftovers, this is just to demonstrate.

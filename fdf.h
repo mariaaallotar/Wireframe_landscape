@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 12:07:42 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:26:54 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct	s_map
 
 typedef struct	fdf
 {
+	mlx_t		*mlx;
 	t_view		view;
 	mlx_image_t	*img;
 	t_map		map;
@@ -90,7 +91,7 @@ void	set_zoom_factor(t_fdf *fdf);
 void	update_max_min_x_y(t_point *point, t_map *map);
 void	center_map(t_fdf *fdf);
 void	add_hooks(mlx_t *mlx, t_fdf *fdf);
-void	draw_map(t_fdf *fdf);
+void	draw_map(t_fdf *fdf, t_map *map);
 void	free_points(int row_index, t_map *map);
 void	error(void);
 

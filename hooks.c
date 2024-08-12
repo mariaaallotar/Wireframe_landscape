@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:50:52 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 11:55:28 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:26:43 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	move(int x, int y, t_fdf *fdf)
 		}
 		i++;
 	}
-	draw_map(fdf);
+	draw_map(fdf, &(fdf->map));
 }
 
 static void	tilt_x(int deg, t_fdf *fdf)
@@ -50,7 +50,7 @@ static void	tilt_x(int deg, t_fdf *fdf)
 		}
 		i++;
 	}
-	draw_map(fdf);
+	draw_map(fdf, &(fdf->map));
 }
 
 static void	tilt_z(int deg, t_fdf *fdf)
@@ -70,7 +70,7 @@ static void	tilt_z(int deg, t_fdf *fdf)
 		}
 		i++;
 	}
-	draw_map(fdf);
+	draw_map(fdf, &(fdf->map));
 }
 
 void	fdf_keyhook(mlx_key_data_t keydata, void *param)

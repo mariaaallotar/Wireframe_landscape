@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 12:09:26 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:48:34 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	populate_map(int i, char *line, t_map *map)
 	{
 		free(line);
 		free_points(i - 1, map);
-		error();
+		error(fdf, 0);
 	}
 	j = 1;
 	while (j <= map->width)

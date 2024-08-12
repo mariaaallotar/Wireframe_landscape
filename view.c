@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:49:27 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 11:41:29 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:30:07 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	center_map(t_fdf *fdf)
 {
-	int x_center;
-    int y_center;
+	int	x_center;
+	int	y_center;
 	int	i;
-	int j;
+	int	j;
 
 	x_center = (fdf->map.smallest_x + fdf->map.biggest_x) / 2;
 	y_center = (fdf->map.smallest_y + fdf->map.biggest_y) / 2;
@@ -48,31 +48,31 @@ void	update_max_min_x_y(t_point *point, t_map *map)
 		map->biggest_y = point->y;
 }
 
-static int  width_zoom_factor(t_fdf *fdf)
+static int	width_zoom_factor(t_fdf *fdf)
 {
-    int	width_zoom;
+	int	width_zoom;
 	int	zoomed_x0;
 	int	zoomed_x1;
 
-    width_zoom = 1;
+	width_zoom = 1;
 	zoomed_x0 = fdf->map.smallest_x;
-	zoomed_x1= fdf->map.biggest_x;
+	zoomed_x1 = fdf->map.biggest_x;
 	while (abs(zoomed_x1 - zoomed_x0) < (fdf->win_width - 200))
 	{
 		width_zoom++;
 		zoomed_x0 = fdf->map.biggest_x * width_zoom;
 		zoomed_x1 = fdf->map.smallest_x * width_zoom;
 	}
-    return (width_zoom);
+	return (width_zoom);
 }
 
-static int  height_zoom_factor(t_fdf *fdf)
+static int	height_zoom_factor(t_fdf *fdf)
 {
 	int	height_zoom;
 	int	zoomed_y0;
 	int	zoomed_y1;
 
-    height_zoom = 1;
+	height_zoom = 1;
 	zoomed_y0 = fdf->map.smallest_y;
 	zoomed_y1 = fdf->map.biggest_y;
 	while (abs(zoomed_y1 - zoomed_y0) < (fdf->win_height - 200))
@@ -81,7 +81,7 @@ static int  height_zoom_factor(t_fdf *fdf)
 		zoomed_y0 = fdf->map.biggest_y * height_zoom;
 		zoomed_y1 = fdf->map.smallest_y * height_zoom;
 	}
-    return (height_zoom);
+	return (height_zoom);
 }
 
 void	set_zoom_factor(t_fdf *fdf)

@@ -36,7 +36,6 @@ $(NAME): $(OBJS) libft
 	$(CC) -g $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
-	echo "Should make libft"
 	make -C $(LIBFT_DIR)
 
 clean:

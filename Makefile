@@ -27,6 +27,8 @@ OBJS	= ${SRCS:.c=.o}
 all: libmlx $(LIBFT) $(NAME)
 
 libmlx:
+	git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX)
+	cd $(LIBMLX)
 	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
@@ -45,6 +47,7 @@ clean:
 
 fclean: clean
 	rm -rf $(NAME)
+	rm -rf $(LIBMLX)
 	make -C $(LIBFT_DIR) fclean
 
 re: fclean all

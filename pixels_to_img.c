@@ -6,13 +6,13 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 15:02:57 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 16:27:00 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/13 13:55:36 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	fill_screen(t_fdf *fdf, int color)
+static void	fill_screen(t_fdf *fdf, int color)
 {
 	mlx_image_t	*img;
 
@@ -20,7 +20,7 @@ void	fill_screen(t_fdf *fdf, int color)
 	ft_memset(img->pixels, color, img->width * img->height * sizeof(int32_t));
 }
 
-void	draw_high_line(t_line *line, t_fdf *fdf)
+static void	draw_high_line(t_line *line, t_fdf *fdf)
 {
 	if (line->dx < 0)
 	{
@@ -35,7 +35,7 @@ void	draw_high_line(t_line *line, t_fdf *fdf)
 		if (line->x >= 0 && line->x < fdf->win_width
 			&& line->y >= 0 && line->y < fdf->win_height)
 		{
-			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
+			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFFFF);
 		}
 		if (line->d > 0)
 		{
@@ -48,7 +48,7 @@ void	draw_high_line(t_line *line, t_fdf *fdf)
 	}
 }
 
-void	draw_low_line(t_line *line, t_fdf *fdf)
+static void	draw_low_line(t_line *line, t_fdf *fdf)
 {
 	if (line->dy < 0)
 	{
@@ -63,7 +63,7 @@ void	draw_low_line(t_line *line, t_fdf *fdf)
 		if (line->x >= 0 && line->x < fdf->win_width
 			&& line->y >= 0 && line->y < fdf->win_height)
 		{
-			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFF);
+			mlx_put_pixel(fdf->img, line->x, line->y, 0xFFFFFFFF);
 		}
 		if (line->d > 0)
 		{
@@ -76,20 +76,7 @@ void	draw_low_line(t_line *line, t_fdf *fdf)
 	}
 }
 
-void	swap_p0_and_p1(t_line *line)
-{
-	float	temp_x0;
-	float	temp_y0;
-
-	temp_x0 = line->x0;
-	temp_y0 = line->y0;
-	line->x0 = line->x1;
-	line->y0 = line->y1;
-	line->x1 = temp_x0;
-	line->y1 = temp_y0;
-}
-
-void	draw_line(t_line *line, t_fdf *fdf)
+static void	draw_line(t_line *line, t_fdf *fdf)
 {
 	if (abs(line->dy) < abs(line->dx))
 	{
@@ -115,18 +102,6 @@ void	draw_line(t_line *line, t_fdf *fdf)
 		else
 			draw_high_line(line, fdf);
 	}
-}
-
-void	init_line(t_line *line, t_point p0, t_point p1)
-{
-	line->x0 = p0.x;
-	line->y0 = p0.y;
-	line->x1 = p1.x;
-	line->y1 = p1.y;
-	line->dx = line->x1 - line->x0;
-	line->dy = line->y1 - line->y0;
-	line->xi = 1;
-	line->yi = 1;
 }
 
 void	draw_map(t_fdf *fdf, t_map *map)

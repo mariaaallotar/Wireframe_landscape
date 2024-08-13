@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:45:46 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 17:48:34 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/13 13:27:22 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static void	set_point(t_map *map, int x, int y, int z)
 	point.bottom_edge = 0;
 	if (y == map->height)
 		point.bottom_edge = 1;
-	map->points[y-1][x-1] = point;
+	map->points[y - 1][x - 1] = point;
 }
 
-static char*	skip_to_next_word(char *line)
+static char	*skip_to_next_word(char *line)
 {
 	while (*line != '\0' && *line != ' ')
 		line++;
@@ -40,33 +40,16 @@ static char*	skip_to_next_word(char *line)
 	return (line);
 }
 
-void	free_points(int row_index, t_map *map)
-{
-	while (row_index >= 0)
-	{
-		if (map->points[row_index] == NULL)
-		{
-			row_index--;
-			continue ;
-		}
-		if (&(map->points[row_index][0]) != NULL)
-			free(&(map->points[row_index][0]));
-
-		row_index--;
-	}
-	free(map->points);
-}
-
-static void	populate_map(int i, char *line, t_map *map)
+static void	populate_map(int i, char *line, t_map *map, t_fdf *fdf)
 {
 	int	j;
 
-	map->points[i-1] = malloc (map->width * sizeof (t_point));
-	if (map->points[i-1] == NULL)
+	map->points[i - 1] = malloc (map->width * sizeof (t_point));
+	if (map->points[i - 1] == NULL)
 	{
 		free(line);
 		free_points(i - 1, map);
-		error(fdf, 0);
+		error(fdf, NULL, 0);
 	}
 	j = 1;
 	while (j <= map->width)
@@ -77,7 +60,7 @@ static void	populate_map(int i, char *line, t_map *map)
 	}
 }
 
-void	parse_map(int fd, t_map *map)
+void	parse_map(int fd, t_map *map, t_fdf *fdf)
 {
 	char	*line;
 	int		i;
@@ -89,37 +72,16 @@ void	parse_map(int fd, t_map *map)
 		if (line == NULL)
 		{
 			free_points(i - 1, map);
-			error();
+			error(fdf, NULL, 0);
 		}
-		populate_map(i, line, map);
+		populate_map(i, line, map, fdf);
 		free(line);
 		i++;
 	}
 	return ;
 }
 
-static int	count_substrings(const char *s, char c)
-{
-	int	count;
-	int	in_substring;
-
-	count = 0;
-	in_substring = 0;
-	while (*s && *s != '\n')
-	{
-		if (*s != c && !in_substring)
-		{
-			in_substring = 1;
-			count++;
-		}
-		else if (*s == c)
-			in_substring = 0;
-		s++;
-	}
-	return (count);
-}
-
-void	get_dimensions(int fd, t_map *map)
+void	get_dimensions(int fd, t_map *map, t_fdf *fdf)
 {
 	char	*line;
 	int		height;
@@ -127,9 +89,7 @@ void	get_dimensions(int fd, t_map *map)
 	height = 0;
 	line = get_next_line(fd);
 	if (line == NULL)
-	{
-		error();
-	}
+		error(fdf, NULL, 0);
 	height++;
 	map->width = count_substrings(line, ' ');
 	free(line);

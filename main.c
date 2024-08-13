@@ -6,21 +6,11 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/12 17:46:40 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/13 13:35:07 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	error(t_fdf *fdf, int free_bol)
-{
-	puts(mlx_strerror(mlx_errno));
-	mlx_delete_image(fdf->mlx, fdf->img);
-	mlx_terminate(fdf->mlx);
-	if (free_bol)
-		free_points(fdf->map.height - 1, &(fdf->map));
-	exit(EXIT_FAILURE);
-}
 
 static void	init_view(t_fdf *fdf)
 {
@@ -52,52 +42,55 @@ static void	init_map(t_fdf *fdf, t_map *map, char *file)
 {
 	int	fd;
 
+	validate_file(file, fdf);
 	fd = open(file, O_RDONLY);
-	//TODO handle wrong file or permissions error
-	get_dimensions(fd, map);
-	map->points = malloc (map->height * sizeof (t_point*));
+	if (fd == -1)
+		error(fdf, file, 0);
+	get_dimensions(fd, map, fdf);
+	map->points = malloc (map->height * sizeof(t_point *));
 	if (map->points == NULL)
-		error(fdf, 0);
+		error(fdf, NULL, 0);
 	close (fd);
 	fd = open(file, O_RDONLY);
 	map->smallest_x = INT32_MAX;
 	map->smallest_y = INT32_MAX;
 	map->biggest_x = INT32_MIN;
 	map->biggest_y = INT32_MIN;
-	parse_map(fd, map);
+	parse_map(fd, map, fdf);
 }
 
-static mlx_t*	init_mlx(t_fdf *fdf)
+static mlx_t	*init_mlx(t_fdf *fdf)
 {
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 
 	mlx = mlx_init(1, 1, "JUST TO INIT GLWF", false);
 	if (!mlx)
-		error(fdf, 0);
+		fdf_mlx_error(fdf, 0);
 	mlx_get_monitor_size(0, &(fdf->win_width), &(fdf->win_height));
 	fdf->win_height -= 80;
 	mlx_terminate(mlx);
 	mlx = NULL;
-	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", false);
+	mlx = mlx_init(fdf->win_width, fdf->win_height, "FDF", true);
 	if (!mlx)
-		error(fdf, 0);
+		fdf_mlx_error(fdf, 0);
 	img = mlx_new_image(mlx, fdf->win_width, fdf->win_height);
 	if (!img)
-		error(fdf, 0);
+		fdf_mlx_error(fdf, 0);
 	fdf->img = img;
 	fdf->mlx = mlx;
 	return (mlx);
 }
 
 int	main(int argc, char *argv[])
-{	//fix the main, error and file opening
+{
 	t_fdf	fdf;
 	mlx_t	*mlx;
 
 	if (argc != 2)
 	{
-		ft_printf("This program takes only one argument: a name of a file ending in '.fdf'.\n");
+		ft_printf("This program takes only one argument:"
+			" a name of a file ending in '.fdf'.\n");
 		return (1);
 	}
 	mlx = init_mlx(&fdf);
@@ -108,12 +101,9 @@ int	main(int argc, char *argv[])
 	draw_map(&fdf, &(fdf.map));
 	add_hooks(mlx, &fdf);
 	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
-        error(&fdf, 1);
+		fdf_mlx_error(&fdf, 1);
 	mlx_loop(mlx);
-	//TODO
-	// Optional, terminate will clean up any leftovers, this is just to demonstrate.
-	mlx_delete_image(mlx, fdf.img);
-	mlx_terminate(mlx);
+	terminate_mlx(&fdf);
 	free_points(fdf.map.height - 1, &(fdf.map));
 	return (EXIT_SUCCESS);
 }

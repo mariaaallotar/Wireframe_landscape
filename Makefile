@@ -17,7 +17,10 @@ SRCS	= main.c \
 	linear_transformations.c \
 	hooks.c \
 	pixels_to_img.c \
-	view.c
+	pixels_to_img_utils.c \
+	view.c \
+	exit.c \
+	utils.c
 
 OBJS	= ${SRCS:.c=.o}
 

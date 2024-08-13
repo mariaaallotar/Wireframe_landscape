@@ -1,5 +1,5 @@
 NAME	= fdf
-CC		= clang -g
+CC		= cc
 CFLAGS	= -Wextra -Wall -Werror
 LIBMLX	= ./MLX42
 

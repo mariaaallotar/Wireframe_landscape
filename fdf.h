@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/13 13:58:12 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/13 14:14:53 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	isometric_transformation(t_map *map);
 void	rotate_around_x(float deg, t_point *point);
 void	rotate_around_y(float deg, t_point *point);
 void	rotate_around_z(float deg, t_point *point);
+void	center_map(t_fdf *fdf);
 
 void	draw_map(t_fdf *fdf, t_map *map);
 void	swap_p0_and_p1(t_line *line);

@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/16 10:39:38 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/16 11:10:44 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	draw_map(t_fdf *fdf, t_map *map);
 void	swap_p0_and_p1(t_line *line);
 void	init_line(t_line *line, t_point p0, t_point p1);
 
-void	validate_file(char *file, t_fdf *fdf);
+void	validate_file(char *file);
 int		count_substrings(const char *s, char c);
 void	update_max_min_x_y(t_point *point, t_map *map);
 

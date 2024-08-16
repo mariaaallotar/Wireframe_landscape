@@ -6,13 +6,13 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 13:19:43 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/13 13:22:22 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/16 11:10:21 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	validate_file(char *file, t_fdf *fdf)
+void	validate_file(char *file)
 {
 	int	str_len;
 
@@ -21,9 +21,6 @@ void	validate_file(char *file, t_fdf *fdf)
 	if (ft_strncmp(file, ".fdf", 4) == 0)
 		return ;
 	ft_printf("The name of a file must end in '.fdf'.\n");
-	mlx_delete_image(fdf->mlx, fdf->img);
-	mlx_close_window(fdf->mlx);
-	mlx_terminate(fdf->mlx);
 	exit(EXIT_FAILURE);
 }
 

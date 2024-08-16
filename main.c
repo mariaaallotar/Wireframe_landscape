@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/13 13:35:07 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/16 11:08:43 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static void	init_map(t_fdf *fdf, t_map *map, char *file)
 {
 	int	fd;
 
-	validate_file(file, fdf);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		error(fdf, file, 0);
@@ -93,6 +92,7 @@ int	main(int argc, char *argv[])
 			" a name of a file ending in '.fdf'.\n");
 		return (1);
 	}
+	validate_file(argv[1]);
 	mlx = init_mlx(&fdf);
 	init_map(&fdf, &(fdf.map), argv[1]);
 	isometric_transformation(&(fdf.map));

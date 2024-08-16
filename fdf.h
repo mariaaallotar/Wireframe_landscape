@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:47:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/13 14:14:53 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/16 10:39:38 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define FDF_H
 
 # include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
 # include <memory.h>
 # include <math.h>
 # include <fcntl.h>

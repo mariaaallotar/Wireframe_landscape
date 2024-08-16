@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:52:38 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/08 12:07:00 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/16 10:48:52 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ int		print_pointer(va_list list);
 int		print_num(va_list list);
 int		print_unsigned(va_list list);
 int		print_hex(va_list list, char type);
-int     ft_count_words(char *line);
+int		ft_count_words(char *line);
 
 #endif

@@ -24,25 +24,24 @@ SRCS	= main.c \
 
 OBJS	= ${SRCS:.c=.o}
 
-all: libmlx $(LIBFT) $(NAME)
+all: $(LIBMLX) $(LIBFT) $(NAME)
 
-libmlx:
+$(LIBMLX):
 	git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX)
 	cd $(LIBMLX)
 	cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	$(CC) -g $(CFLAGS) -o $@ -c $< $(HEADERS)
+	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS) libft
-	$(CC) -g $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 clean:
 	rm -rf $(OBJS)
-	rm -rf $(LIBMLX)/build
 	make -C $(LIBFT_DIR) clean
 
 fclean: clean

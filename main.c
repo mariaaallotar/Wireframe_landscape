@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 09:46:03 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/16 11:08:43 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/22 09:41:01 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static mlx_t	*init_mlx(t_fdf *fdf)
 	img = mlx_new_image(mlx, fdf->win_width, fdf->win_height);
 	if (!img)
 		fdf_mlx_error(fdf, 0);
+	if (mlx_image_to_window(mlx, img, 10, 10) < 0)
+		fdf_mlx_error(fdf, 1);
 	fdf->img = img;
 	fdf->mlx = mlx;
 	return (mlx);
@@ -100,8 +102,6 @@ int	main(int argc, char *argv[])
 	center_map(&(fdf));
 	draw_map(&fdf, &(fdf.map));
 	add_hooks(mlx, &fdf);
-	if (mlx_image_to_window(mlx, fdf.img, 0, 0) < 0)
-		fdf_mlx_error(&fdf, 1);
 	mlx_loop(mlx);
 	terminate_mlx(&fdf);
 	free_points(fdf.map.height - 1, &(fdf.map));

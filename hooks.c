@@ -6,7 +6,7 @@
 /*   By: maheleni <maheleni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:50:52 by maheleni          #+#    #+#             */
-/*   Updated: 2024/08/13 13:49:45 by maheleni         ###   ########.fr       */
+/*   Updated: 2024/08/22 09:50:56 by maheleni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,5 @@ void	add_hooks(mlx_t *mlx, t_fdf *fdf)
 {
 	mlx_key_hook(mlx, &fdf_keyhook, fdf);
 	mlx_close_hook(mlx, &fdf_closehook, fdf);
+	mlx_resize_hook(mlx, NULL, fdf);
 }

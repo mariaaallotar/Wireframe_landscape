@@ -11,8 +11,8 @@ The project 'fil de fer' or wireframe model in english is the first graphical pr
 
 |MAP|    MODEL         |
 | -----------  | ----------- |
-|![image](https://github.com/user-attachments/assets/331f1de3-f572-42c7-9b28-20e035157ddf) | ![map rendered](https://github.com/user-attachments/assets/4e87438f-0aeb-4dd8-a5b4-ef9212b238d9)|
-|  | ![image](https://github.com/user-attachments/assets/bce688b0-b67f-47cf-a30b-d754ad148c9d) |
+|test_maps/10-2.fdf| ![map rendered](https://github.com/user-attachments/assets/4e87438f-0aeb-4dd8-a5b4-ef9212b238d9)|
+|test_maps/t2.fdf  | ![image](https://github.com/user-attachments/assets/bce688b0-b67f-47cf-a30b-d754ad148c9d) |
 
 ## Technologies Used
 

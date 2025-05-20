@@ -23,7 +23,7 @@ The project 'fil de fer' or wireframe model in english is the first graphical pr
 
 ## Technologies Used
 
-- `C`, `Makefile`
+- `C`, `Makefile`, `Git`
 - [MLX42](https://github.com/codam-coding-college/MLX42/tree/master)
 
 ## What I learned

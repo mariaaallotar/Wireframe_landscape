@@ -10,7 +10,7 @@ The program renders an isometric projection of the given map as a wireframe land
 ## Demo
 
 The result of rendering the map: test_maps/pylone.fdf in the program
-![Gif of a remdered wireframe that is rotated](https://github.com/user-attachments/assets/2925fdc9-2938-4320-b3f6-a25837e131b7)
+![Gif of a rendered wireframe that is rotated](https://github.com/user-attachments/assets/2925fdc9-2938-4320-b3f6-a25837e131b7)
 
 
 ## Allowed external functions

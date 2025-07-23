@@ -1,18 +1,17 @@
-# fdf
+# Wirefram landscape
 
-The project 'fil de fer' or wireframe model in english is the first graphical project of the 42 curriculum. The program renders an isometric projection of the given map. The user is then able to rotate and move the model.   
+The program renders an isometric projection of the given map as a wireframe landscape. The user is then able to rotate and move the model.
 
 ## Features
 
 - rotation and move on screen
 - renderes model based on user map
 
-## Screenshots
+## Demo
 
-|MAP|    MODEL         |
-| -----------  | ----------- |
-|test_maps/10-2.fdf| ![map rendered](https://github.com/user-attachments/assets/4e87438f-0aeb-4dd8-a5b4-ef9212b238d9)|
-|test_maps/t2.fdf  | ![image](https://github.com/user-attachments/assets/bce688b0-b67f-47cf-a30b-d754ad148c9d) |
+The result of rendering the map: test_maps/pylone.fdf in the program
+![Gif of a remdered wireframe that is rotated](https://github.com/user-attachments/assets/2925fdc9-2938-4320-b3f6-a25837e131b7)
+
 
 ## Allowed external functions
 
